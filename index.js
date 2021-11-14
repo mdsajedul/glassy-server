@@ -19,6 +19,15 @@ async function run(){
     try{
         await client.connect();
         console.log('Database conneced successfully');
+        const database = client.db('glassy');
+        const glassesCollection = database.collection('glasses');
+
+        // Get All 
+        app.get('/glasses' ,async(req , res)=>{
+            const cursor = glassesCollection.find({});
+            const glasses = await cursor.toArray();
+            res.send(glasses);
+        })
     }
     finally{
 
