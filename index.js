@@ -23,6 +23,8 @@ async function run(){
         console.log('Database conneced successfully');
         const database = client.db('glassy');
         const glassesCollection = database.collection('glasses');
+        const ordersCollection = database.collection('orders');
+        const usersCollection = database.collection('users');
 
         // Get All 
         app.get('/glasses' ,async(req , res)=>{
@@ -38,6 +40,42 @@ async function run(){
             const glasses = await glassesCollection.findOne(query);
             res.send(glasses);
         })
+
+        //post api for orders
+        app.post('/orders' ,async(req , res)=>{
+            const order = req.body;
+            const result = await ordersCollection.insertOne(order);
+            res.send(result);
+        })
+
+        //Post api for user 
+        app.post('/users' ,async(req , res)=>{
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.send(result);
+        });
+
+        //put api for user
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        });
+
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
+        })
+
     }
     finally{
 
