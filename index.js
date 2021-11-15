@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -26,6 +28,14 @@ async function run(){
         app.get('/glasses' ,async(req , res)=>{
             const cursor = glassesCollection.find({});
             const glasses = await cursor.toArray();
+            res.send(glasses);
+        })
+
+        // Get One by id
+        app.get('/glasses/:id' ,async(req , res)=>{
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)};
+            const glasses = await glassesCollection.findOne(query);
             res.send(glasses);
         })
     }
