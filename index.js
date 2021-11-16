@@ -42,6 +42,13 @@ async function run(){
             res.send(glasses);
         })
 
+        //post api for glasses 
+        app.post('/glasses' ,async(req , res)=>{
+            const glass = req.body;
+            const result = await glassesCollection.insertOne(glass);
+            res.send(result);
+        })
+
         //delete api for glasses by id
         app.delete('/glasses/:id' ,async(req , res)=>{
             const id = req.params.id;
@@ -62,6 +69,17 @@ async function run(){
             const result = await usersCollection.insertOne(user);
             res.send(result);
         });
+        //get api for users
+        app.get('/users' ,async(req , res)=>{
+            const cursor = usersCollection.find({});
+            const users = await cursor.toArray();
+            res.send(users);  
+        });
+
+
+       
+
+       
 
         //put api for user
         app.put('/users', async (req, res) => {
@@ -72,6 +90,26 @@ async function run(){
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         });
+
+
+
+         //put api for user as admin
+         app.put('/users/:id' ,async(req , res)=>{
+            const id = req.params.id;
+            const updateUser = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    
+                    role:updateUser.role
+                },
+            };
+            const result = await usersCollection.updateOne(filter, updateDoc, options)
+            console.log('updating', id)
+            res.json(result)
+        })
+    
  
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
@@ -81,8 +119,9 @@ async function run(){
             if (user?.role === 'admin') {
                 isAdmin = true;
             }
-            res.json({ admin: isAdmin });
+            res.json({ admin: isAdmin ,user});
         })
+
 
         //get api all orders by email 
         app.get('/orders/:email' ,async(req , res)=>{
