@@ -25,6 +25,7 @@ async function run(){
         const glassesCollection = database.collection('glasses');
         const ordersCollection = database.collection('orders');
         const usersCollection = database.collection('users');
+        const reviewsCollection = database.collection('reviews');
 
         // Get All 
         app.get('/glasses' ,async(req , res)=>{
@@ -91,7 +92,12 @@ async function run(){
         const result = await ordersCollection.deleteOne(query);
         res.send(result);
       })
-        
+        //post api for review 
+        app.post('/reviews' ,async(req , res)=>{
+            const review = req.body;
+            const result = await reviewsCollection.insertOne(review);
+            res.send(result);
+        })
 
     }
     finally{
