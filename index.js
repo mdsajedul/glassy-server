@@ -15,7 +15,7 @@ app.use(express.json())
 // db connection 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.tmldf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-console.log(uri)
+
 
 async function run(){
     try{
@@ -106,7 +106,7 @@ async function run(){
                 },
             };
             const result = await usersCollection.updateOne(filter, updateDoc, options)
-            console.log('updating', id)
+           
             res.json(result)
         })
     
@@ -172,7 +172,7 @@ async function run(){
                 },
             };
             const result = await ordersCollection.updateOne(filter, updateDoc, options)
-            console.log('updating', id)
+            
             res.json(result)
         })
     }
