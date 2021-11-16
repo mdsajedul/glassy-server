@@ -42,6 +42,13 @@ async function run(){
             res.send(glasses);
         })
 
+        //delete api for glasses by id
+        app.delete('/glasses/:id' ,async(req , res)=>{
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)};
+            const glasses = await glassesCollection.deleteOne(query);
+            res.send(glasses);
+        })
         //post api for orders
         app.post('/orders' ,async(req , res)=>{
             const order = req.body;
@@ -85,6 +92,13 @@ async function run(){
             res.send(orders);
         })
 
+        //get api all orders 
+        app.get('/orders' ,async(req , res)=>{
+            const cursor = ordersCollection.find({});
+            const orders = await cursor.toArray();
+            res.send(orders);
+        })
+
         //order delete api 
       app.delete('/orders/:id' ,async(req , res)=>{
         const id = req.params.id;
@@ -99,6 +113,29 @@ async function run(){
             res.send(result);
         })
 
+        //get api for all reviews
+        app.get('/reviews' ,async(req , res)=>{
+            const cursor = reviewsCollection.find({});
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        })
+
+        //put api for order status 
+        app.put('/orders/:id' ,async(req , res)=>{
+            const id = req.params.id;
+            const updateOrder = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    
+                    OrderStatus:updateOrder.status
+                },
+            };
+            const result = await ordersCollection.updateOne(filter, updateDoc, options)
+            console.log('updating', id)
+            res.json(result)
+        })
     }
     finally{
 
