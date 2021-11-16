@@ -64,7 +64,7 @@ async function run(){
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         });
-
+ 
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -75,6 +75,15 @@ async function run(){
             }
             res.json({ admin: isAdmin });
         })
+
+        //get api all orders by email 
+        app.get('/orders/:email' ,async(req , res)=>{
+            const email = req.params.email;
+            const query = {email:email};
+            const orders = await ordersCollection.find(query).toArray();
+            res.send(orders);
+        })
+        
 
     }
     finally{
