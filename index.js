@@ -130,7 +130,7 @@ async function run(){
             const orders = await ordersCollection.find(query).toArray();
             res.send(orders);
         })
-
+        
         //get api all orders 
         app.get('/orders' ,async(req , res)=>{
             const cursor = ordersCollection.find({});
